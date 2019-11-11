@@ -1,0 +1,13 @@
+{
+  "stringstack": {
+    "express": {
+      "http": {
+        "enabled": true,
+        "port": 8000
+      },
+      "https": {
+        "enabled": false
+      }
+    }
+  }
+}
