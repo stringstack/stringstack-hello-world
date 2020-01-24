@@ -2,7 +2,7 @@
 
 const App = require( './app' );
 const daemonix = require( 'daemonix' );
-const logger = require( './logger' );
+const logger = require( './logger' )();
 
 daemonix( {
   app: App,

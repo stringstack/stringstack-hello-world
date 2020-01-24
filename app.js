@@ -1,7 +1,7 @@
 'use strict';
 
 const Core = require( 'stringstack' );
-const logger = require( './logger' );
+const logger = require( './logger' )();
 
 let core = new Core();
 

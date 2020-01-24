@@ -17,49 +17,53 @@ const levels = {
   silly: 9
 };
 
-const logLevel = process.env.NODE_LOG_LEVEL || 'info';
+module.exports = function () {
 
-if ( !Object.hasOwnProperty.call( levels, logLevel ) ) {
-  throw new Error( 'NODE_LOG_LEVEL not not one of the valid levels in logger.js' );
-}
+  const logLevel = process.env.NODE_LOG_LEVEL || 'info';
 
-const logger = winston.createLogger( {
-  levels: levels,
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf( info => {
-      return `${ info.timestamp }: ${ info.level }: ${ info.message }`;
-    } )
-  ),
-  transports: [
-    new winston.transports.Console( {
-      timestamp: true,
-      colorize: true,
-      level: logLevel // default to info, unless environment overrides
-    } )
-  ]
-} );
-
-module.exports = function ( level, path, message, meta ) {
-
-  // Syslog and NPM both have a warning log level, but one is short and one is long, map to the one we use
-  if ( level === 'warn' ) {
-    level = 'warning';
+  if ( !Object.hasOwnProperty.call( levels, logLevel ) ) {
+    throw new Error( 'NODE_LOG_LEVEL not not one of the valid levels in logger.js' );
   }
 
-  // map StringStack log event (level, path, message, meta) to our transport of choice: Winston (level, message)
-  message = `[${ process.pid }] ${ path }: ${ message }`;
+  const logger = winston.createLogger( {
+    levels: levels,
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.printf( info => {
+        return `${ info.timestamp }: ${ info.level }: ${ info.message }`;
+      } )
+    ),
+    transports: [
+      new winston.transports.Console( {
+        timestamp: true,
+        colorize: true,
+        level: logLevel // default to info, unless environment overrides
+      } )
+    ]
+  } );
 
-  if ( meta instanceof Error ) {
-    meta = `: ${ message.message }: ${ message.stack }`;
-  } else if ( typeof meta === 'string' ) {
-    meta = `: ${ meta }`;
-  } else if ( meta ) {
-    meta = `: ${ JSON.stringify( meta ) }`;
-  } else {
-    meta = '';
-  }
+  return function ( level, path, message, meta ) {
 
-  logger.log( level, message + meta );
+    // Syslog and NPM both have a warning log level, but one is short and one is long, map to the one we use
+    if ( level === 'warn' ) {
+      level = 'warning';
+    }
+
+    // map StringStack log event (level, path, message, meta) to our transport of choice: Winston (level, message)
+    message = `[${ process.pid }] ${ path }: ${ message }`;
+
+    if ( meta instanceof Error ) {
+      meta = `: ${ message.message }: ${ message.stack }`;
+    } else if ( typeof meta === 'string' ) {
+      meta = `: ${ meta }`;
+    } else if ( meta ) {
+      meta = `: ${ JSON.stringify( meta ) }`;
+    } else {
+      meta = '';
+    }
+
+    logger.log( level, message + meta );
+
+  };
 
 };
