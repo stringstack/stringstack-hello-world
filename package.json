@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@stringstack/express": "0.2.0",
-    "async": "3.1.0",
+    "async": "3.2.2",
     "daemonix": "3.0.3",
     "request": "2.88.0",
     "stringstack": "0.4.4",
