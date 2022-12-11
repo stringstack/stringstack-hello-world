@@ -11,7 +11,7 @@
     "test": "./node_modules/mocha/bin/mocha --exit --bail test/main.test.js"
   },
   "dependencies": {
-    "@stringstack/express": "0.2.0",
+    "@stringstack/express": "0.2.1",
     "async": "3.1.0",
     "daemonix": "3.0.3",
     "request": "2.88.0",
